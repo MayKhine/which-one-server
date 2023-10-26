@@ -1,0 +1,6 @@
+- Mongo DB
+- mongosh: connect to mongo db
+- show dbs: show all db
+- use dbName: use the db with dbName
+- show collections: show all collection
+- db.createCollection("collectionName"): create a new collection
