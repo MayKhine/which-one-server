@@ -1,7 +1,7 @@
 import express from "express"
 import bodyParser from "body-parser"
 import { connectToDb } from "./config/database"
-import { setUpUsers } from "./api/users"
+import { addUser, updateUser, getUser, deleteUser } from "./api/users"
 
 const app = express()
 const port = 3300
@@ -25,17 +25,15 @@ async function main() {
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
   })
+  app.use(bodyParser.json())
 
-  setUpUsers(app, database)
+  getUser(app, database)
+  addUser(app, database)
+  updateUser(app, database)
+  deleteUser(app, database)
 }
 
 main()
-//test data
-const users = [
-  { id: 1, name: "user1" },
-  { id: 2, name: "user2" },
-  { id: 3, name: "user3" },
-]
 
 // app.use(bodyParser.json())
 
@@ -68,21 +66,7 @@ app.get("/users/:userID", (req, res) => {
 })
 
 //update
-app.put("/users/:userID", (req, res) => {
-  const userID = parseInt(req.params.userID, 10)
-  const updatedUserData = req.body
-  console.log("Update user:", userID)
 
-  const user = users.find((user) => user.id === userID)
-
-  if (user) {
-    // Update user data with new information
-    user.name = updatedUserData.name
-    return res.json({ message: "User information updated", user: user })
-  } else {
-    return res.status(404).json({ error: "User not found" })
-  }
-})
 
 //post
 app.post("/register", (req, res) => {
