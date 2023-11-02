@@ -1,9 +1,12 @@
 import express from "express"
 import bodyParser from "body-parser"
 import { connectToDb } from "./config/database"
-import { addUser, updateUser, getUser, deleteUser } from "./api/users"
+import { addUser, editUser, getUser, deleteUser, getAllUser } from "./api/users"
+import { addPost, deletePost, editPost, getPost } from "./api/posts"
+import cors from "cors"
 
 const app = express()
+app.use(cors())
 const port = 3300
 
 type User = {
@@ -17,7 +20,7 @@ async function main() {
   const client = await connectToDb()
 
   const database = client?.db("mydb")
-  const whichone = database?.collection<User>("whichone")
+  const whichone = database?.collection<User>("whichoneusers")
   const userDataArr = await whichone?.find({}).toArray()
   console.log("Database data: ", userDataArr)
 
@@ -27,58 +30,16 @@ async function main() {
   })
   app.use(bodyParser.json())
 
+  getAllUser(app, database)
   getUser(app, database)
   addUser(app, database)
-  updateUser(app, database)
+  editUser(app, database)
   deleteUser(app, database)
+
+  addPost(app, database)
+  getPost(app, database)
+  deletePost(app, database)
+  editPost(app, database)
 }
 
 main()
-
-// app.use(bodyParser.json())
-
-// app.use(express.static("public"))
-
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*")
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST")
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type")
-//   next()
-// })
-
-/*
-//get
-app.get("/", (req, res) => {
-  res.send("Which one")
-})
-
-app.get("/users/:userID", (req, res) => {
-  const userID = parseInt(req.params.userID, 10)
-  console.log("Get user:", userID)
-
-  const user = users.find((user) => user.id === userID)
-
-  if (user) {
-    res.json(user)
-  } else {
-    res.status(404).json({ error: "UserNotfound" })
-  }
-})
-
-//update
-
-
-//post
-app.post("/register", (req, res) => {
-  console.log("res ", res.status)
-  res.send("Got a POST request")
-
-  const jsonData = req.body
-  console.log(jsonData)
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
-
-*/

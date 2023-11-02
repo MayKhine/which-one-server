@@ -1,39 +1,46 @@
 import { Db } from "mongodb"
+const userCollectionName = "whichoneusers"
+
+export const getAllUser = (app: any, database: Db) => {
+  const userCollection = database.collection(userCollectionName)
+
+  app.get("/users", async (req, res) => {
+    const users = await userCollection.find({}).toArray()
+    console.log("Get all users", users)
+    res.json(users)
+  })
+}
 
 export const getUser = (app: any, database: Db) => {
-  const userCollection = database.collection("whichone")
+  const userCollection = database.collection(userCollectionName)
 
   app.get("/users/:userID", async (req, res) => {
     const userID = parseInt(req.params.userID, 10)
-
     const user = await userCollection.findOne({ id: userID })
-    console.log("Get user ", userID, user)
-    res.json(user)
+    console.log("Get user ", userID)
+    res.json({ message: "User information updated", result: user })
   })
 }
 
 //add user : POST
 export const addUser = (app: any, database: Db) => {
-  const userCollection = database.collection("whichone")
+  const userCollection = database.collection(userCollectionName)
 
   app.post("/register", async (req, res) => {
     console.log("res ", res.status)
-    res.send("Got a POST request")
+    // res.send("Got a POST request")
 
     const newUser = req.body
-    console.log(newUser)
+    // console.log(newUser)
     console.log("new user: ", newUser)
     const result = await userCollection.insertOne(newUser)
-    if (result) {
-      console.log("Add user: success")
-    }
+    res.json({ message: "User information updated", result: result })
   })
 }
 
 //update user : PUT
-export const updateUser = (app: any, database: Db) => {
-  const userCollection = database.collection("whichone")
-
+export const editUser = (app: any, database: Db) => {
+  const userCollection = database.collection(userCollectionName)
   app.put("/users/:userID", async (req, res) => {
     const userID = parseInt(req.params.userID, 10)
     const updatedUserData = req.body
@@ -45,19 +52,19 @@ export const updateUser = (app: any, database: Db) => {
       { $set: updatedUserData },
       options
     )
-    return res.json({ message: "User information updated" })
+    res.json({ message: "User information updated" })
   })
 }
 
 //delete user
 export const deleteUser = (app: any, database: Db) => {
-  const userCollection = database.collection("whichone")
+  const userCollection = database.collection(userCollectionName)
 
   app.delete("/users/:userID", async (req, res) => {
-    const userId = parseInt(req.params.userID, 10)
-    const filter = { id: userId }
+    const userID = parseInt(req.params.userID, 10)
+    const filter = { id: userID }
     const result = userCollection.deleteOne(filter)
 
-    return res.json({ message: "User is deleted:", result: result })
+    res.json({ message: "User is deleted:", result: result })
   })
 }
