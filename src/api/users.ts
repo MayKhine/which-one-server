@@ -1,7 +1,7 @@
 import { Db } from "mongodb"
 const userCollectionName = "whichoneusers"
 
-export const getAllUser = (app: any, database: Db) => {
+export const getAllUsers = (app: any, database: Db) => {
   const userCollection = database.collection(userCollectionName)
 
   app.get("/users", async (req, res) => {
@@ -31,10 +31,19 @@ export const addUser = (app: any, database: Db) => {
     // res.send("Got a POST request")
 
     const newUser = req.body
-    // console.log(newUser)
-    console.log("new user: ", newUser)
-    const result = await userCollection.insertOne(newUser)
-    res.json({ message: "User information updated", result: result })
+    const newUserName = newUser.name
+    const curUser = await userCollection.findOne({ name: newUserName })
+    console.log("newUserName: ", newUserName, "and curUser: ", curUser)
+
+    if (curUser === null) {
+      const result = await userCollection.insertOne(newUser)
+      res.json({ message: `User ${newUserName} is created.`, result: result })
+    } else {
+      res.json({
+        message: "User name already exists. Please try with another one.",
+        curUser,
+      })
+    }
   })
 }
 

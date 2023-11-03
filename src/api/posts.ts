@@ -14,6 +14,17 @@ export const addPost = (app: any, database: Db) => {
   })
 }
 
+export const getAllPosts = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.get("/posts", async (req, res) => {
+    const posts = await postCollection.find({}).toArray()
+
+    console.log("Found posts: ", posts)
+    res.json(posts)
+  })
+}
+
 export const getPost = (app: any, database: Db) => {
   const postCollection = database.collection(postCollectionName)
 

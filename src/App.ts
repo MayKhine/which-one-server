@@ -1,8 +1,20 @@
 import express from "express"
 import bodyParser from "body-parser"
 import { connectToDb } from "./config/database"
-import { addUser, editUser, getUser, deleteUser, getAllUser } from "./api/users"
-import { addPost, deletePost, editPost, getPost } from "./api/posts"
+import {
+  addUser,
+  editUser,
+  getUser,
+  deleteUser,
+  getAllUsers,
+} from "./api/users"
+import {
+  addPost,
+  deletePost,
+  editPost,
+  getPost,
+  getAllPosts,
+} from "./api/posts"
 import cors from "cors"
 
 const app = express()
@@ -30,14 +42,17 @@ async function main() {
   })
   app.use(bodyParser.json())
 
-  getAllUser(app, database)
+  getAllUsers(app, database)
   getUser(app, database)
+
   addUser(app, database)
   editUser(app, database)
   deleteUser(app, database)
 
-  addPost(app, database)
+  getAllPosts(app, database)
   getPost(app, database)
+
+  addPost(app, database)
   deletePost(app, database)
   editPost(app, database)
 }
