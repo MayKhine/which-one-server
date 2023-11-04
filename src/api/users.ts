@@ -11,14 +11,25 @@ export const getAllUsers = (app: any, database: Db) => {
   })
 }
 
+// export const getUser = (app: any, database: Db) => {
+//   const userCollection = database.collection(userCollectionName)
+
+//   app.get("/users/:userID", async (req, res) => {
+//     const userID = parseInt(req.params.userID, 10)
+//     const user = await userCollection.findOne({ id: userID })
+//     console.log("Get user ", userID)
+//     res.json({ message: "User information updated", result: user })
+//   })
+// }
+
 export const getUser = (app: any, database: Db) => {
   const userCollection = database.collection(userCollectionName)
 
-  app.get("/users/:userID", async (req, res) => {
-    const userID = parseInt(req.params.userID, 10)
-    const user = await userCollection.findOne({ id: userID })
-    console.log("Get user ", userID)
-    res.json({ message: "User information updated", result: user })
+  app.get("/users/:userName", async (req, res) => {
+    const userName = req.params.userName
+    const user = await userCollection.findOne({ name: userName })
+    console.log("Get user ", userName)
+    res.json({ message: "Get User Request completed", result: user })
   })
 }
 
