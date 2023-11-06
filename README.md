@@ -15,6 +15,23 @@ db.createCollection("whichoneposts")
 -- post
 db.createCollection("whichoneposts")
 
-db.whichoneposts.insertMany([{id: 111,userId: 1, question: 'which color is better', answerType: 'img', answers: ['red','white', 'black'],imgDesc: ['redcolor', 'whitecolor', 'blackcolor'] }, { id: 222,userId: 2,question: 'which food is better',answerType: 'text',answers: ['chicken', 'white', 'black'],imgDesc: []}])
-
 db.whichoneposts.insertMany([{id: 111,userName: 'test', question: 'which color is better', answerType: 'img', answers: ['red','white', 'black'],imgDesc: ['redcolor', 'whitecolor', 'blackcolor'] }, { id: 222,userName: 'test',question: 'which food is better',answerType: 'text',answers: ['chicken', 'white', 'black'],imgDesc: []}])
+
+//insert with voting
+db.whichoneposts.insertOne({id: 111,userName: 'test', question: 'which color is better', answerType: 'img', answers: ['red','white', 'black'],imgDesc: ['redcolor', 'whitecolor', 'blackcolor'] ,
+voting: [['user3', 'user2'] , ['test']]})
+
+db.whichoneposts.insertMany([
+{
+id: 111,
+userName: 'test',
+question: 'which color is better',
+answerType: 'img',
+answers: ['red','white', 'black'],
+imgDesc: ['redcolor', 'whitecolor', 'blackcolor'] ,
+voting: [['user1', 'user2'] , ['test']]
+},
+
+{ id: 222,userName: 'test',question: 'which food is better',answerType: 'text',answers: ['chicken', 'white', 'black'],imgDesc: []}])
+
+db.whichoneposts.deleteMany({})

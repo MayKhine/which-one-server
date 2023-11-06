@@ -29,7 +29,7 @@ export const getUser = (app: any, database: Db) => {
     const userName = req.params.userName
     const user = await userCollection.findOne({ name: userName })
     console.log("Get user ", userName)
-    res.json({ message: "Get User Request completed", result: user })
+    res.json({ message: "success", result: user })
   })
 }
 
