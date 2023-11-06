@@ -15,6 +15,8 @@ import {
   getPost,
   getAllPosts,
 } from "./api/posts"
+import { voteOnPost } from "./api/voting"
+
 import cors from "cors"
 
 const app = express()
@@ -55,6 +57,8 @@ async function main() {
   addPost(app, database)
   deletePost(app, database)
   editPost(app, database)
+
+  voteOnPost(app, database)
 }
 
 main()
