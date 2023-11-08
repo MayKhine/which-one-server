@@ -29,7 +29,11 @@ export const getUser = (app: any, database: Db) => {
     const userName = req.params.userName
     const user = await userCollection.findOne({ name: userName })
     console.log("Get user ", userName)
-    res.json({ message: "success", result: user })
+    if (user) {
+      res.json({ success: true, message: "success", result: user })
+    } else {
+      res.json({ success: false, message: "failed", result: user })
+    }
   })
 }
 

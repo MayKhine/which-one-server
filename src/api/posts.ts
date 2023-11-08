@@ -25,6 +25,24 @@ export const getAllPosts = (app: any, database: Db) => {
   })
 }
 
+export const getPostByUser = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.get("/users/:userName/posts", async (req, res) => {
+    const userName = req.params.userName
+    console.log("GET POST BY USER NAME: ", userName)
+
+    const filter = { userName: userName }
+
+    const posts = await postCollection.find(filter).toArray()
+    if (posts.length > 0) {
+      res.json({ success: true, message: "got posts", result: posts })
+    } else {
+      res.json({ success: false, message: "no posts", result: posts })
+    }
+  })
+}
+
 export const getPost = (app: any, database: Db) => {
   const postCollection = database.collection(postCollectionName)
 
