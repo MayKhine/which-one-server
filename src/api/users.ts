@@ -52,9 +52,14 @@ export const addUser = (app: any, database: Db) => {
 
     if (curUser === null) {
       const result = await userCollection.insertOne(newUser)
-      res.json({ message: `User ${newUserName} is created.`, result: result })
+      res.json({
+        success: true,
+        message: `User ${newUserName} is created.`,
+        result: result,
+      })
     } else {
       res.json({
+        success: false,
         message: "User name already exists. Please try with another one.",
         curUser,
       })

@@ -58,6 +58,22 @@ export const getPost = (app: any, database: Db) => {
   })
 }
 
+// `http://localhost:3300/users/${userName}/posts/${post.id}?delete=true`,
+
+export const deletePostByUser = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.delete("/users/:userName/posts/:postID", async (req, res) => {
+    const postID = req.params.postID
+    const userName = req.params.userName
+    const filter = { id: postID, userName: userName }
+    console.log("Delete post by post id: ", postID, userName)
+    const result = await postCollection.deleteOne(filter)
+    console.log("Delete post")
+    res.json(result)
+  })
+}
+
 export const deletePost = (app: any, database: Db) => {
   const postCollection = database.collection(postCollectionName)
 

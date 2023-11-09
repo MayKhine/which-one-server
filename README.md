@@ -35,3 +35,4 @@ voting: [['user1', 'user2'] , ['test']]
 { id: 222,userName: 'test',question: 'which food is better',answerType: 'text',answers: ['chicken', 'white', 'black'],imgDesc: []}])
 
 db.whichoneposts.deleteMany({})
+db.whichoneusers.deleteMany({})
