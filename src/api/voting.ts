@@ -11,7 +11,6 @@ const checkUserVoted = (voteData: Array<Array<string>>, userName: string) => {
       }
     }
   }
-
   return false
 }
 
@@ -24,7 +23,6 @@ export const voteOnPost = (app: any, database: Db) => {
     const voterName = postData.votingUser
     const answer = postData.answer
     const answerIndex = postData.answerIndex
-    // console.log("From front end : ", postData, postID)
     //get the current data
     const curPostData = await postCollection.findOne({ id: postID })
 
@@ -42,25 +40,19 @@ export const voteOnPost = (app: any, database: Db) => {
       return
     } else {
       const voteChoiceArrToUpdate = curVoteData[answerIndex]
-      // console.log("Cur Vote Data: ", curVoteData)
-
-      // console.log("voteChoiceToUpdate ", voteChoiceArrToUpdate)
 
       voteChoiceArrToUpdate.push(voterName)
-      // console.log("voteChoiceToUpdate after push", voteChoiceArrToUpdate)
 
       curVoteData[answerIndex] = voteChoiceArrToUpdate
       const updatedPostData = {
         ...curPostData,
         voting: curVoteData,
       }
-      // console.log("updatedPostData: ", updatedPostData)
       const result = await postCollection.findOneAndUpdate(
         { id: postID },
         { $set: updatedPostData }
       )
       const isPostUpdated = await postCollection.findOne({ id: postID })
-      // console.log("Is post updated from db: ", isPostUpdated)
 
       res.json({
         success: true,

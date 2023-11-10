@@ -11,17 +11,6 @@ export const getAllUsers = (app: any, database: Db) => {
   })
 }
 
-// export const getUser = (app: any, database: Db) => {
-//   const userCollection = database.collection(userCollectionName)
-
-//   app.get("/users/:userID", async (req, res) => {
-//     const userID = parseInt(req.params.userID, 10)
-//     const user = await userCollection.findOne({ id: userID })
-//     console.log("Get user ", userID)
-//     res.json({ message: "User information updated", result: user })
-//   })
-// }
-
 export const getUser = (app: any, database: Db) => {
   const userCollection = database.collection(userCollectionName)
 
@@ -29,7 +18,7 @@ export const getUser = (app: any, database: Db) => {
     const userName = req.params.userName
     const user = await userCollection.findOne({ name: userName })
     console.log("Get user ", userName)
-    if (user) {
+    if (user != null) {
       res.json({ success: true, message: "success", result: user })
     } else {
       res.json({ success: false, message: "failed", result: user })
@@ -50,7 +39,7 @@ export const addUser = (app: any, database: Db) => {
     const curUser = await userCollection.findOne({ name: newUserName })
     console.log("newUserName: ", newUserName, "and curUser: ", curUser)
 
-    if (curUser === null) {
+    if (curUser == null) {
       const result = await userCollection.insertOne(newUser)
       res.json({
         success: true,
@@ -81,7 +70,19 @@ export const editUser = (app: any, database: Db) => {
       { $set: updatedUserData },
       options
     )
-    res.json({ message: "User information updated" })
+    if (result != null) {
+      res.json({
+        success: true,
+        message: "user updated",
+        result: result,
+      })
+    } else {
+      res.json({
+        success: false,
+        message: "not updated",
+        result: result,
+      })
+    }
   })
 }
 
@@ -94,6 +95,20 @@ export const deleteUser = (app: any, database: Db) => {
     const filter = { id: userID }
     const result = userCollection.deleteOne(filter)
 
-    res.json({ message: "User is deleted:", result: result })
+    // res.json({ message: "User is deleted:", result: result })
+
+    if (result != null) {
+      res.json({
+        success: true,
+        message: "User is deleted",
+        result: result,
+      })
+    } else {
+      res.json({
+        success: false,
+        message: "User is  not deleted",
+        result: result,
+      })
+    }
   })
 }

@@ -9,8 +9,14 @@ export const addPost = (app: any, database: Db) => {
 
     const result = await postCollection.insertOne(newPost)
 
-    console.log("Added a new post: ", result)
-    res.json({ message: "success" })
+    // console.log("Added a new post: ", result)
+    // res.json({ message: "success" })
+
+    if (result != null) {
+      res.json({ success: true, message: "got posts", result: result })
+    } else {
+      res.json({ success: false, message: "got no posts", result: result })
+    }
   })
 }
 
@@ -20,8 +26,14 @@ export const getAllPosts = (app: any, database: Db) => {
   app.get("/posts", async (req, res) => {
     const posts = await postCollection.find({}).toArray()
 
-    console.log("Found posts: ", posts)
-    res.json(posts)
+    // console.log("Found posts: ", posts)
+    // res.json(posts)
+
+    if (posts.length > 0) {
+      res.json({ success: true, message: "got posts", result: posts })
+    } else {
+      res.json({ success: false, message: "got no posts", result: posts })
+    }
   })
 }
 
@@ -35,6 +47,7 @@ export const getPostByUser = (app: any, database: Db) => {
     const filter = { userName: userName }
 
     const posts = await postCollection.find(filter).toArray()
+
     if (posts.length > 0) {
       res.json({ success: true, message: "got posts", result: posts })
     } else {
@@ -53,8 +66,14 @@ export const getPost = (app: any, database: Db) => {
 
     const post = await postCollection.findOne({ id: postID })
 
-    console.log("Found post: ", post)
-    res.json(post)
+    // console.log("Found post: ", post)
+    // res.json(post)
+
+    if (post != null) {
+      res.json({ success: true, message: "got post", result: post })
+    } else {
+      res.json({ success: false, message: "no posts", result: post })
+    }
   })
 }
 
@@ -69,8 +88,18 @@ export const deletePostByUser = (app: any, database: Db) => {
     const filter = { id: postID, userName: userName }
     console.log("Delete post by post id: ", postID, userName)
     const result = await postCollection.deleteOne(filter)
-    console.log("Delete post")
-    res.json(result)
+    // console.log("Delete post")
+    // res.json(result)
+
+    if (result != null) {
+      res.json({ success: true, message: "Delete post", result: result })
+    } else {
+      res.json({
+        success: false,
+        message: "Delete post failed",
+        result: result,
+      })
+    }
   })
 }
 
@@ -82,8 +111,17 @@ export const deletePost = (app: any, database: Db) => {
     const filter = { id: postID }
     console.log("Delete post by post id: ", postID)
     const result = await postCollection.deleteOne(filter)
-    console.log("Delete post")
-    res.json(result)
+    // console.log("Delete post")
+    // res.json(result)
+    if (result != null) {
+      res.json({ success: true, message: "Delete post", result: result })
+    } else {
+      res.json({
+        success: false,
+        message: "Delete post failed",
+        result: result,
+      })
+    }
   })
 }
 
@@ -100,6 +138,15 @@ export const editPost = (app: any, database: Db) => {
       { $set: updatedPostData },
       options
     )
-    res.json({ message: "updated post", result })
+    // res.json({ message: "updated post", result })
+    if (result != null) {
+      res.json({ success: true, message: "Delete post", result: result })
+    } else {
+      res.json({
+        success: false,
+        message: "Delete post failed",
+        result: result,
+      })
+    }
   })
 }
