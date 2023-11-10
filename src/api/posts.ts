@@ -13,9 +13,13 @@ export const addPost = (app: any, database: Db) => {
     // res.json({ message: "success" })
 
     if (result != null) {
-      res.json({ success: true, message: "got posts", result: result })
+      res.json({ success: true, message: "created a new post", result: result })
     } else {
-      res.json({ success: false, message: "got no posts", result: result })
+      res.json({
+        success: false,
+        message: "Had an error adding a new post",
+        result: result,
+      })
     }
   })
 }
@@ -119,6 +123,42 @@ export const deletePost = (app: any, database: Db) => {
       res.json({
         success: false,
         message: "Delete post failed",
+        result: result,
+      })
+    }
+  })
+}
+
+export const editPostByUser = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.put("/users/:userName/posts/:postID", async (req, res) => {
+    const postID = req.params.postID
+    const userName = req.params.userName
+    const filter = { id: postID, userName: userName }
+    console.log("Update post by post id: ", postID, userName)
+    // const result = await postCollection.deleteOne(filter)
+
+    // const postID = req.params.postID
+    const updatedPostData = req.body
+    // const filter = { id: postID }
+    const options = { upsert: false }
+    const result = postCollection.updateOne(
+      filter,
+      { $set: updatedPostData },
+      options
+    )
+
+    if (result != null) {
+      res.json({
+        success: true,
+        message: "Update post by user",
+        result: result,
+      })
+    } else {
+      res.json({
+        success: false,
+        message: "Update post failed",
         result: result,
       })
     }
