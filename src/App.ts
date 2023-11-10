@@ -16,6 +16,7 @@ import {
   getAllPosts,
   getPostByUser,
   deletePostByUser,
+  editPostByUser,
 } from "./api/posts"
 import { voteOnPost } from "./api/voting"
 
@@ -63,6 +64,7 @@ async function main() {
   voteOnPost(app, database)
   getPostByUser(app, database)
   deletePostByUser(app, database)
+  editPostByUser(app, database)
 }
 
 main()
