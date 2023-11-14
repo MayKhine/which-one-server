@@ -26,6 +26,24 @@ export const getUser = (app: any, database: Db) => {
   })
 }
 
+//check if user ald exists , if not upsert
+export const patchUser = (app: any, database: Db) => {
+  const userCollection = database.collection(userCollectionName)
+
+  app.patch("/register", async (req, res) => {
+    const userInfo = req.body
+    const userEmail = userInfo.email
+    const user = await userCollection.findOne({ email: userEmail })
+    console.log("Get user ", user)
+    if (user == null) {
+      //add user to db
+      // res.json({ success: true, message: "success", result: user })
+    } else {
+      // res.json({ success: false, message: "failed", result: user })
+    }
+  })
+}
+
 //add user : POST
 export const addUser = (app: any, database: Db) => {
   const userCollection = database.collection(userCollectionName)

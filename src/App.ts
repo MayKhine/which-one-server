@@ -7,6 +7,7 @@ import {
   getUser,
   deleteUser,
   getAllUsers,
+  patchUser,
 } from "./api/users"
 import {
   addPost,
@@ -80,6 +81,8 @@ async function main() {
   getPostByUser(app, database)
   deletePostByUser(app, database)
   editPostByUser(app, database)
+
+  patchUser(app, database)
 }
 
 main()
