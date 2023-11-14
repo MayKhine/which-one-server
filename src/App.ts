@@ -32,6 +32,21 @@ type User = {
   year: number
   email: string
 }
+// var request = require("request")
+
+// var options = {
+//   method: "POST",
+//   url: "https://dev-7q5k3j3ynd5hljge.us.auth0.com/oauth/token",
+//   headers: { "content-type": "application/json" },
+//   body: '{"client_id":"xCmsejuRj7n8E92KmOLlJl0bTFt6hipQ","client_secret":"QNNrz6oir8ZEYYMegSB9GUB4ihZV26i2U8WuEbAtgNOoFEp8QFk-pzFeTG8uioe8","audience":"http://localhost:3300","grant_type":"client_credentials"}',
+//   // body: '{"client_id":"qpxc2Hu732gLhkNj1JxeX4LoNRHHx26c","client_secret":"qGYdetlCZxYx-HkJWVnH2zOYkLUxntFbEJEfEXZ8sjSzVVI4wMbKIKhc5PnJ2-bD","audience":"http://localhost:5173","grant_type":"client_credentials"}',
+// }
+
+// request(options, function (error, response, body) {
+//   if (error) throw new Error(error)
+
+//   console.log(body)
+// })
 
 async function main() {
   const client = await connectToDb()
