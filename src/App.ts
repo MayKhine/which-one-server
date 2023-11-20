@@ -2,19 +2,9 @@ import express from "express"
 import bodyParser from "body-parser"
 import { connectToDb } from "./config/database"
 import { getAllUsers, patchUser } from "./api/users"
-import {
-  addPost,
-  deletePost,
-  editPost,
-  getPost,
-  getAllPosts,
-  getPostByUser,
-  deletePostByUser,
-  editPostByUser,
-} from "./api/posts"
-import { voteOnPost } from "./api/voting"
 
 import cors from "cors"
+import { getAllPostsExceptLoginUser } from "./api/posts"
 
 const app = express()
 app.use(cors())
@@ -31,9 +21,9 @@ async function main() {
   const client = await connectToDb()
 
   const database = client?.db("mydb")
-  const whichone = database?.collection<User>("whichoneusers")
-  const userDataArr = await whichone?.find({}).toArray()
-  console.log("Database data: ", userDataArr)
+  // const whichone = database?.collection<User>("whichoneusers")
+  // const userDataArr = await whichone?.find({}).toArray()
+  // console.log("Database data: ", userDataArr)
 
   // Start your Express.js application once the MongoDB connection is established
   app.listen(port, () => {
@@ -62,6 +52,7 @@ async function main() {
 
   patchUser(app, database)
   getAllUsers(app, database)
+  getAllPostsExceptLoginUser(app, database)
 }
 
 main()
