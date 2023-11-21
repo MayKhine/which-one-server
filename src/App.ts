@@ -1,7 +1,7 @@
 import express from "express"
 import bodyParser from "body-parser"
 import { connectToDb } from "./config/database"
-import { getAllUsers, patchUser } from "./api/users"
+import { getAllUsers, getUserInfoAndPosts, patchUser } from "./api/users"
 
 import cors from "cors"
 import { getAllPostsExceptLoginUser, getPosts } from "./api/posts"
@@ -54,6 +54,7 @@ async function main() {
   getAllUsers(app, database)
   getAllPostsExceptLoginUser(app, database)
   getPosts(app, database)
+  getUserInfoAndPosts(app, database)
 }
 
 main()

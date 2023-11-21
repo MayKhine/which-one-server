@@ -46,3 +46,40 @@ export const patchUser = (app: any, database: Db) => {
     }
   })
 }
+
+export const getUserInfoAndPosts = (app: any, database: Db) => {
+  const userCollection = database.collection(userCollectionName)
+  const postCollectionName = "whichoneposts"
+  const postCollection = database.collection(postCollectionName)
+
+  app.get("/users/:userEmail", async (req, res) => {
+    const userEmail = req.params.userEmail
+
+    // const user = await userCollection.findOne({ email: userEmail })
+    // console.log("Get user ", userEmail)
+    // if (user != null) {
+    //   res.json({ success: true, message: "success", result: user })
+    // } else {
+    //   res.json({ success: false, message: "failed", result: user })
+    // }
+    const userInfoAndPosts = await userCollection
+      .aggregate([
+        {
+          $lookup: {
+            from: "whichoneposts",
+            localField: "email",
+            foreignField: "postCreater",
+            as: "postsArr",
+          },
+        },
+        { $match: { email: userEmail } },
+      ])
+      .toArray()
+
+    if (userInfoAndPosts !== null) {
+      res.json({ success: true, message: "success", result: userInfoAndPosts })
+    } else {
+      res.json({ success: false, message: "failed", result: userInfoAndPosts })
+    }
+  })
+}

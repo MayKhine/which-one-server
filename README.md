@@ -47,6 +47,8 @@ db.whichoneposts.aggregate({$lookup: {from: "whichoneusers", localField: "postCr
 
 ## db.whichoneposts.aggregate({$lookup: {from: "whichoneusers", localField: "postCreater", foreignField: "email", as: "postCreaterInfo"}}, {$match: {"postCreater": {$ne: "tester1@gmail.com"}}})
 
+db.whichoneposts.aggregate({$lookup: {from: "whichoneusers", localField: "postCreater", foreignField: "email", as: "postCreaterInfo"}}, {$match: {"postCreater": "tester1@gmail.com"}})
+
 example post
 
 db.whichoneposts.insertOne({id: '111',postCreater: 'tester1@gmail.com', question: 'which color is better', answerType: 'img', answers: ['red','white'],imgDesc: ['redcolor', 'whitecolor', 'blackcolor'] ,
