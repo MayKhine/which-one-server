@@ -27,7 +27,7 @@ export const patchUser = (app: any, database: Db) => {
       picture: userInfo.picture,
     }
 
-    if (user == null) {
+    if (user === null) {
       //add user to db
       const result = await userCollection.insertOne(newUser)
       console.log("Patch User - added a new user", result)

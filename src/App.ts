@@ -4,7 +4,7 @@ import { connectToDb } from "./config/database"
 import { getAllUsers, patchUser } from "./api/users"
 
 import cors from "cors"
-import { getAllPostsExceptLoginUser } from "./api/posts"
+import { getAllPostsExceptLoginUser, getPosts } from "./api/posts"
 
 const app = express()
 app.use(cors())
@@ -53,6 +53,7 @@ async function main() {
   patchUser(app, database)
   getAllUsers(app, database)
   getAllPostsExceptLoginUser(app, database)
+  getPosts(app, database)
 }
 
 main()

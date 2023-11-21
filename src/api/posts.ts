@@ -38,3 +38,31 @@ export const getAllPostsExceptLoginUser = (app: any, database: Db) => {
     res.json({ result: posts })
   })
 }
+
+export const getPosts = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.get("/posts", async (req, res) => {
+    const posts = await postCollection
+      .aggregate([
+        {
+          $lookup: {
+            from: "whichoneusers",
+            localField: "postCreater",
+            foreignField: "email",
+            as: "postCreaterInfo",
+          },
+        },
+      ])
+      .toArray()
+
+    // console.log("Found posts: ", posts)
+    // res.json(posts)
+
+    if (posts.length > 0) {
+      res.json({ success: true, message: "got posts", result: posts })
+    } else {
+      res.json({ success: false, message: "got no posts", result: posts })
+    }
+  })
+}
