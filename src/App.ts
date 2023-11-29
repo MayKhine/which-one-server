@@ -4,7 +4,7 @@ import { connectToDb } from "./config/database"
 import { getAllUsers, getUserInfoAndPosts, patchUser } from "./api/users"
 
 import cors from "cors"
-import { getAllPostsExceptLoginUser, getPosts } from "./api/posts"
+import { createPost, getAllPostsExceptLoginUser, getPosts } from "./api/posts"
 
 const app = express()
 app.use(cors())
@@ -55,6 +55,7 @@ async function main() {
   getAllPostsExceptLoginUser(app, database)
   getPosts(app, database)
   getUserInfoAndPosts(app, database)
+  createPost(app, database)
 }
 
 main()

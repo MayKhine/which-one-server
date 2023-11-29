@@ -1,4 +1,5 @@
 import { Db } from "mongodb"
+import { v4 as uuidv4 } from "uuid"
 const postCollectionName = "whichoneposts"
 
 export const getAllPostsExceptLoginUser = (app: any, database: Db) => {
@@ -63,6 +64,50 @@ export const getPosts = (app: any, database: Db) => {
       res.json({ success: true, message: "got posts", result: posts })
     } else {
       res.json({ success: false, message: "got no posts", result: posts })
+    }
+  })
+}
+
+export const createPost = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.post("/:userEmail/createpost", async (req, res) => {
+    const userEmail = req.params.userEmail
+    const post = req.body
+    const question = post.question
+    console.log("Create Post : ", post, " by userEmai: ", userEmail)
+
+    const result = await postCollection.findOne({
+      question: question,
+      postCreater: userEmail,
+    })
+
+    if (result != null) {
+      res.json({
+        success: false,
+        message: "Question has been asked",
+        result: result,
+      })
+    } else {
+      const newPost = {
+        id: uuidv4(),
+        postCreater: userEmail,
+        ...post,
+      }
+      const insertResult = await postCollection.insertOne(newPost)
+      if (insertResult != null) {
+        res.json({
+          success: true,
+          message: "Created a new post",
+          result: insertResult,
+        })
+      } else {
+        res.json({
+          success: false,
+          message: "Had an error adding a new post",
+          result: insertResult,
+        })
+      }
     }
   })
 }
