@@ -29,7 +29,7 @@ export const getAllPostsExceptLoginUser = (app: any, database: Db) => {
 
     // db.whichoneposts.aggregate({$lookup: {from: "whichoneusers", localField: "postCreater", foreignField: "email", as: "postCreaterInfo"}}, {$match: {"postCreater": {$ne: "tester1@gmail.com"}}})
 
-    console.log("Found posts: ", posts)
+    // console.log("Found posts: ", posts)
 
     // if (posts.length > 0) {
     //   res.json({ success: true, message: "got posts", result: posts })
@@ -68,6 +68,48 @@ export const getPosts = (app: any, database: Db) => {
   })
 }
 
+export const getPostsByEmail = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.get("/postsbyemail", async (req, res) => {
+    // const queryParams = req.query
+    const userEmail = req.query.email
+
+    console.log("POSTS BY EMAIL: ", userEmail)
+
+    const posts = await postCollection
+      .aggregate([
+        {
+          $lookup: {
+            from: "whichoneusers",
+            localField: "postCreater",
+            foreignField: "email",
+            as: "postCreaterInfo",
+          },
+        },
+        { $match: { postCreater: userEmail } },
+      ])
+      .toArray()
+
+    if (posts.length > 0) {
+      res.json({ success: true, message: "got posts", result: posts })
+    } else {
+      //get user info
+      const userCollectionName = "whichoneusers"
+
+      const userCollection = database.collection(userCollectionName)
+
+      const getUserInfo = async () => {
+        const userInfo = await userCollection.findOne({ email: userEmail })
+        console.log("WHAT IS USERINFO: ", userInfo)
+        res.json({ success: false, message: "got no posts", result: userInfo })
+      }
+      getUserInfo()
+      // res.json({ success: false, message: "got no posts", result: posts })
+    }
+  })
+}
+
 export const createPost = (app: any, database: Db) => {
   const postCollection = database.collection(postCollectionName)
 
@@ -75,7 +117,7 @@ export const createPost = (app: any, database: Db) => {
     const userEmail = req.params.userEmail
     const post = req.body
     const question = post.question
-    console.log("Create Post : ", post, " by userEmai: ", userEmail)
+    // console.log("Create Post : ", post, " by userEmai: ", userEmail)
 
     const result = await postCollection.findOne({
       question: question,

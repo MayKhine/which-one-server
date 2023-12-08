@@ -7,7 +7,7 @@ export const getAllUsers = (app: any, database: Db) => {
 
   app.get("/users", async (req, res) => {
     const users = await userCollection.find({}).toArray()
-    console.log("Get all users", users)
+    // console.log("Get all users", users)
     res.json(users)
   })
 }
@@ -30,14 +30,14 @@ export const patchUser = (app: any, database: Db) => {
     if (user === null) {
       //add user to db
       const result = await userCollection.insertOne(newUser)
-      console.log("Patch User - added a new user", result)
+      // console.log("Patch User - added a new user", result)
       res.json({
         success: true,
         message: `User ${newUser} is created.`,
         result: result,
       })
     } else {
-      console.log("Patch User: Already exists", user)
+      // console.log("Patch User: Already exists", user)
       res.json({
         success: false,
         message: `User  ${user}  already existed`,
@@ -55,13 +55,6 @@ export const getUserInfoAndPosts = (app: any, database: Db) => {
   app.get("/users/:userEmail", async (req, res) => {
     const userEmail = req.params.userEmail
 
-    // const user = await userCollection.findOne({ email: userEmail })
-    // console.log("Get user ", userEmail)
-    // if (user != null) {
-    //   res.json({ success: true, message: "success", result: user })
-    // } else {
-    //   res.json({ success: false, message: "failed", result: user })
-    // }
     const userInfoAndPosts = await userCollection
       .aggregate([
         {

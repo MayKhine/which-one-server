@@ -1,5 +1,6 @@
 import { Db } from "mongodb"
 const postCollectionName = "whichoneposts"
+
 export const addPost = (app: any, database: Db) => {
   const postCollection = database.collection(postCollectionName)
 
