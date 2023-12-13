@@ -60,8 +60,8 @@ voting: [['user3@gmail.com', 'user2@email.com'] , ['test@email.com']]})
 db.whichoneposts.insertOne({id: '1212',postCreater: 'eman@gmail.com', question: 'Ethan questions', answerType: 'img', answers: ['ansA','ansb'],imgDesc: ['redcolor', 'whitecolor', 'blackcolor'] ,
 voting: [['user3@gmail.com', 'user2@email.com'] , ['test@email.com']]})
 
-db.whichoneposts.insertOne({id: '1212',postCreater: 'tester2@gmail.com', question: 'Ethan questions', answerType: 'img', answers: ['ansA','ansb'],imgDesc: ['redcolor', 'whitecolor', 'blackcolor'] ,
-voting: [['user3@gmail.com', 'user2@email.com'] , ['test@email.com']]})
+db.whichoneposts.insertOne({id: '1-def-212',postCreater: 'tester2@gmail.com', question: 'tester2 questions', answers: ['ansA','ansb']})
+db.whichoneposts.insertOne({id: '1-def-212',postCreater: 'tester1@gmail.com', question: 'tester1 test questions', answers: ['hello','howdy']})
 
 ---
 

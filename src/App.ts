@@ -6,7 +6,7 @@ import { getAllUsers, getUserInfoAndPosts, patchUser } from "./api/users"
 import cors from "cors"
 import {
   createPost,
-  getAllPostsExceptLoginUser,
+  // getAllPostsExceptLoginUser,
   getPosts,
   getPostsByEmail,
 } from "./api/posts"
@@ -57,7 +57,7 @@ async function main() {
 
   patchUser(app, database)
   getAllUsers(app, database)
-  getAllPostsExceptLoginUser(app, database)
+  // getAllPostsExceptLoginUser(app, database)
   getPosts(app, database)
   getUserInfoAndPosts(app, database)
   getPostsByEmail(app, database)
