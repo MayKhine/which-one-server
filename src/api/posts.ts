@@ -1,5 +1,6 @@
 import { Db } from "mongodb"
 import { v4 as uuidv4 } from "uuid"
+import multer from "multer"
 const postCollectionName = "whichoneposts"
 
 // export const getAllPostsExceptLoginUser = (app: any, database: Db) => {
@@ -152,4 +153,34 @@ export const createPost = (app: any, database: Db) => {
       }
     }
   })
+}
+
+// image import
+import path from "path"
+
+// Multer configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "src/api/images") // Destination folder for storing images
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)) // File naming strategy
+  },
+})
+
+const upload = multer({ storage: storage })
+
+export const addImage = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.post(
+    "/:userEmail/createpost/image",
+    upload.single("image"),
+    (req, res) => {
+      console.log("HERE", req.image)
+      // 'image' is the field name in the form data
+      // console.log("what is in upload: ", upload, req)
+      // res.json({ message: "Image uploaded successfully!" })
+    }
+  )
 }

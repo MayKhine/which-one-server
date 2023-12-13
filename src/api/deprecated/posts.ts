@@ -10,9 +10,6 @@ export const addPost = (app: any, database: Db) => {
 
     const result = await postCollection.insertOne(newPost)
 
-    // console.log("Added a new post: ", result)
-    // res.json({ message: "success" })
-
     if (result != null) {
       res.json({ success: true, message: "created a new post", result: result })
     } else {

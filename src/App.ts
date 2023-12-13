@@ -9,6 +9,7 @@ import {
   // getAllPostsExceptLoginUser,
   getPosts,
   getPostsByEmail,
+  addImage,
 } from "./api/posts"
 
 const app = express()
@@ -62,6 +63,7 @@ async function main() {
   getUserInfoAndPosts(app, database)
   getPostsByEmail(app, database)
   createPost(app, database)
+  addImage(app, database)
 }
 
 main()
