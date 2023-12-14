@@ -1,45 +1,25 @@
 import { Db } from "mongodb"
 import { v4 as uuidv4 } from "uuid"
 import multer from "multer"
+import path from "path"
 const postCollectionName = "whichoneposts"
-import { PostModel, TestImgModel } from "../models/PostModel"
-// export const getAllPostsExceptLoginUser = (app: any, database: Db) => {
-//   const postCollection = database.collection(postCollectionName)
 
-//   app.get("/posts-except-login-user", async (req, res) => {
-//     const queryParams = req.query
-//     // Access the parameters from the query string
+// UUID
+let tempImgFileName = ""
 
-//     // const posts = await postCollection
-//     //   .find({ postCreater: { $ne: queryParams.userEmail } })
-//     //   .toArray()
+// Multer configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images") // Destination folder for storing images
+  },
+  filename: (req, file, cb) => {
+    // cb(null, Date.now() + path.extname(file.originalname)) // File naming strategy
+    tempImgFileName = uuidv4() + path.extname(file.originalname)
+    cb(null, tempImgFileName) // File naming strategy
+  },
+})
 
-//     const posts = await postCollection
-//       .aggregate([
-//         {
-//           $lookup: {
-//             from: "whichoneusers",
-//             localField: "postCreater",
-//             foreignField: "email",
-//             as: "postCreaterInfo",
-//           },
-//         },
-//         { $match: { postCreater: { $ne: queryParams.userEmail } } },
-//       ])
-//       .toArray()
-
-//     // db.whichoneposts.aggregate({$lookup: {from: "whichoneusers", localField: "postCreater", foreignField: "email", as: "postCreaterInfo"}}, {$match: {"postCreater": {$ne: "tester1@gmail.com"}}})
-
-//     // console.log("Found posts: ", posts)
-
-//     // if (posts.length > 0) {
-//     //   res.json({ success: true, message: "got posts", result: posts })
-//     // } else {
-//     //   res.json({ success: false, message: "got no posts", result: posts })
-//     // }
-//     res.json({ result: posts })
-//   })
-// }
+const upload = multer({ storage: storage })
 
 export const getPosts = (app: any, database: Db) => {
   const postCollection = database.collection(postCollectionName)
@@ -57,9 +37,6 @@ export const getPosts = (app: any, database: Db) => {
         },
       ])
       .toArray()
-
-    // console.log("Found posts: ", posts)
-    // res.json(posts)
 
     if (posts.length > 0) {
       res.json({ success: true, message: "got posts", result: posts })
@@ -106,7 +83,6 @@ export const getPostsByEmail = (app: any, database: Db) => {
         res.json({ success: false, message: "got no posts", result: userInfo })
       }
       getUserInfo()
-      // res.json({ success: false, message: "got no posts", result: posts })
     }
   })
 }
@@ -118,7 +94,6 @@ export const createPost = (app: any, database: Db) => {
     const userEmail = req.params.userEmail
     const post = req.body
     const question = post.question
-    // console.log("Create Post : ", post, " by userEmai: ", userEmail)
 
     const result = await postCollection.findOne({
       question: question,
@@ -155,43 +130,11 @@ export const createPost = (app: any, database: Db) => {
   })
 }
 
-// image import
-import path from "path"
-
-// UUID
-let tempImgFileName = ""
-// Multer configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "images") // Destination folder for storing images
-  },
-  filename: (req, file, cb) => {
-    // cb(null, Date.now() + path.extname(file.originalname)) // File naming strategy
-    tempImgFileName = uuidv4() + path.extname(file.originalname)
-    cb(null, tempImgFileName) // File naming strategy
-  },
-})
-
-const upload = multer({ storage: storage })
-
 export const addImage = (app: any, database: Db) => {
   const postCollection = database.collection("testposts")
-  app.post("/image", upload.single("image"), async (req, res) => {
-    // const newPost1 = new TestImgModel({
-    //   id: "test",
-    //   postCreater: "m",
-    //   image: tempImgID,
-    // })
-    const newPost = {
-      id: "test",
-      postCreater: "m",
-      image: tempImgID,
-    }
-    const insertResult = await postCollection.insertOne(newPost)
-    // const insertResult = await newPost1.save()
-    console.log("req: ", req.file, newPost, insertResult)
+  app.post("/image", upload.single("image"), (req, res) => {
     res.json({
-      message: "Image uploaded successfully!",
+      success: true,
       image: tempImgFileName,
     })
   })

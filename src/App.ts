@@ -2,7 +2,8 @@ import express from "express"
 import bodyParser from "body-parser"
 import { connectToDb } from "./config/database"
 import { getAllUsers, getUserInfoAndPosts, patchUser } from "./api/users"
-
+import multer from "multer"
+import path from "path"
 import cors from "cors"
 import {
   createPost,
@@ -11,6 +12,7 @@ import {
   getPostsByEmail,
   addImage,
 } from "./api/posts"
+import { getImageByID } from "./api/images"
 
 const app = express()
 app.use(cors())
@@ -27,29 +29,14 @@ async function main() {
   const client = await connectToDb()
 
   const database = client?.db("mydb")
-  // const whichone = database?.collection<User>("whichoneusers")
-  // const userDataArr = await whichone?.find({}).toArray()
-  // console.log("Database data: ", userDataArr)
 
-  // Start your Express.js application once the MongoDB connection is established
+  // Serve the images folder statically
+  app.use("images", express.static("images"))
+
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
   })
   app.use(bodyParser.json())
-
-  // getAllUsers(app, database)
-  // getUser(app, database)
-
-  // addUser(app, database)
-  // editUser(app, database)
-  // deleteUser(app, database)
-
-  // getAllPosts(app, database)
-  // getPost(app, database)
-
-  // addPost(app, database)
-  // deletePost(app, database)
-  // editPost(app, database)
 
   // voteOnPost(app, database)
   // getPostByUser(app, database)
@@ -58,12 +45,12 @@ async function main() {
 
   patchUser(app, database)
   getAllUsers(app, database)
-  // getAllPostsExceptLoginUser(app, database)
   getPosts(app, database)
   getUserInfoAndPosts(app, database)
   getPostsByEmail(app, database)
   createPost(app, database)
   addImage(app, database)
+  getImageByID(app)
 }
 
 main()

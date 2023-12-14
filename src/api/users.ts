@@ -18,7 +18,7 @@ export const patchUser = (app: any, database: Db) => {
 
   app.patch("/register", async (req, res) => {
     const userInfo = req.body
-    console.log("NEW USER INFO: ", req.body)
+    // console.log("NEW USER INFO: ", req.body)
     const userEmail = userInfo.email
     const user = await userCollection.findOne({ email: userEmail })
     const newUser = {
