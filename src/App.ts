@@ -31,7 +31,9 @@ async function main() {
   const database = client?.db("mydb")
 
   // Serve the images folder statically
-  app.use("images", express.static("images"))
+  // app.use("images", express.static("images"))
+  app.use(express.static("images"))
+  //http://localhost:3300/f702ccb0-2982-49c7-b756-becbc4f68b9a.jpg
 
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`)

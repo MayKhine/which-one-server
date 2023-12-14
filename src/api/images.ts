@@ -15,6 +15,7 @@ export const getImageByID = (app: any) => {
     // console.log("IMAGE from file: ", image)
     try {
       res.json({ image })
+      // res.json({ imageBuffer: req.file.buffer.toString("base64") })
     } catch (error: any) {
       console.log("Error sending img to fe: ", error.message)
     }
