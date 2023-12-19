@@ -2,6 +2,8 @@ import { Db } from "mongodb"
 import { v4 as uuidv4 } from "uuid"
 import multer from "multer"
 import path from "path"
+import { DateTime } from "luxon"
+
 const postCollectionName = "whichoneposts"
 
 // UUID
@@ -107,9 +109,14 @@ export const createPost = (app: any, database: Db) => {
         result: result,
       })
     } else {
+      const ansOptionLength = post.answers.length
+      const votingArr = new Array(ansOptionLength).fill([])
+
       const newPost = {
         id: uuidv4(),
+        createTime: DateTime.now(),
         postCreater: userEmail,
+        voting: votingArr,
         ...post,
       }
       const insertResult = await postCollection.insertOne(newPost)

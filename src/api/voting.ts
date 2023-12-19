@@ -1,12 +1,14 @@
 import { Db } from "mongodb"
 const postCollectionName = "whichoneposts"
 
-const checkUserVoted = (voteData: Array<Array<string>>, userName: string) => {
-  console.log("Check user voted", userName, voteData)
-  for (let i = 0; i <= voteData.length; i++) {
-    for (let j = 0; j <= voteData[i]?.length; j++) {
-      console.log("Current Checking: ", voteData[i][j], userName)
-      if (voteData[i][j] == userName) {
+const checkUserVoted = (
+  voterData: Array<Array<string>>,
+  curVoterEmail: string
+) => {
+  for (let i = 0; i <= voterData.length; i++) {
+    for (let j = 0; j <= voterData[i]?.length; j++) {
+      console.log("Current Checking: ", voterData[i][j], curVoterEmail)
+      if (voterData[i][j] == curVoterEmail) {
         return true
       }
     }
@@ -17,22 +19,23 @@ const checkUserVoted = (voteData: Array<Array<string>>, userName: string) => {
 export const voteOnPost = (app: any, database: Db) => {
   const postCollection = database.collection(postCollectionName)
 
-  app.put("/posts/:postID/vote", async (req, res) => {
-    const postID = req.params.postID
-    const postData = req.body
-    const voterName = postData.votingUser
-    const answer = postData.answer
-    const answerIndex = postData.answerIndex
+  app.put("/vote", async (req, res) => {
+    const votingData = req.body
+    const email = votingData.voterEmail
+    const answerIndex = votingData.ansIndex
+    const postID = votingData.postID
     //get the current data
     const curPostData = await postCollection.findOne({ id: postID })
 
     const response = JSON.stringify(curPostData)
-    // console.log("Response: ", response)
+    console.log("votingDtaa: ", votingData)
+    console.log("curPostData: ", response)
 
     const curVoteData = curPostData?.voting
 
+    console.log("curVoteData: ", curVoteData)
     //check if the user already booked
-    if (checkUserVoted(curVoteData, voterName)) {
+    if (checkUserVoted(curVoteData, email)) {
       res.json({
         success: false,
         message: "User already voted on this quesions",
@@ -41,7 +44,7 @@ export const voteOnPost = (app: any, database: Db) => {
     } else {
       const voteChoiceArrToUpdate = curVoteData[answerIndex]
 
-      voteChoiceArrToUpdate.push(voterName)
+      voteChoiceArrToUpdate.push(email)
 
       curVoteData[answerIndex] = voteChoiceArrToUpdate
       const updatedPostData = {

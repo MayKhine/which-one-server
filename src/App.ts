@@ -13,6 +13,7 @@ import {
   addImage,
 } from "./api/posts"
 import { getImageByID } from "./api/images"
+import { voteOnPost } from "./api/voting"
 
 const app = express()
 app.use(cors())
@@ -53,6 +54,7 @@ async function main() {
   createPost(app, database)
   addImage(app, database)
   getImageByID(app)
+  voteOnPost(app, database)
 }
 
 main()
