@@ -1,7 +1,12 @@
 import express from "express"
 import bodyParser from "body-parser"
 import { connectToDb } from "./config/database"
-import { getAllUsers, getUserInfoAndPosts, patchUser } from "./api/users"
+import {
+  getAllUsers,
+  getUserInfo,
+  // getUserInfoAndPosts,
+  patchUser,
+} from "./api/users"
 import multer from "multer"
 import path from "path"
 import cors from "cors"
@@ -11,6 +16,7 @@ import {
   getPosts,
   getPostsByEmail,
   addImage,
+  deletePost,
 } from "./api/posts"
 import { getImageByID } from "./api/images"
 import { voteOnPost } from "./api/voting"
@@ -49,12 +55,14 @@ async function main() {
   patchUser(app, database)
   getAllUsers(app, database)
   getPosts(app, database)
-  getUserInfoAndPosts(app, database)
+  getUserInfo(app, database)
+  // getUserInfoAndPosts(app, database)
   getPostsByEmail(app, database)
   createPost(app, database)
   addImage(app, database)
   getImageByID(app)
   voteOnPost(app, database)
+  deletePost(app, database)
 }
 
 main()

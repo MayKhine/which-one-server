@@ -92,9 +92,11 @@ export const getPostsByEmail = (app: any, database: Db) => {
 export const createPost = (app: any, database: Db) => {
   const postCollection = database.collection(postCollectionName)
 
-  app.post("/:userEmail/createpost", async (req, res) => {
-    const userEmail = req.params.userEmail
+  // app.post("/:userEmail/createpost", async (req, res) => {
+  app.post("/createpost", async (req, res) => {
+    // const userEmail = req.params.userEmail
     const post = req.body
+    const userEmail = post.postCreater
     const question = post.question
 
     const result = await postCollection.findOne({
@@ -144,5 +146,28 @@ export const addImage = (app: any, database: Db) => {
       success: true,
       image: tempImgFileName,
     })
+  })
+}
+
+export const deletePost = (app: any, database: Db) => {
+  const postCollection = database.collection(postCollectionName)
+
+  app.delete("/delete/:postID", async (req, res) => {
+    const postID = req.params.postID
+    const filter = { id: postID }
+
+    console.log("Delete post for this post id: ", postID)
+
+    const result = await postCollection.deleteOne(filter)
+
+    if (result != null) {
+      res.json({ success: true, message: "Delete post", result: result })
+    } else {
+      res.json({
+        success: false,
+        message: "Delete post failed",
+        result: result,
+      })
+    }
   })
 }
