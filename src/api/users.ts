@@ -16,41 +16,53 @@ export const getAllUsers = (app: any, database: Db) => {
 export const patchUser = (app: any, database: Db) => {
   const userCollection = database.collection(userCollectionName)
 
-  app.patch("/register", async (req, res) => {
-    const userInfo = req.body
-    const userEmail = userInfo.email
-    // const user = await userCollection.findOne({ email: userEmail })
+  app.patch(
+    "/register",
+    async (req, res) => {
+      const userInfo = req.body
+      const userEmail = userInfo.email
+      // const user = await userCollection.findOne({ email: userEmail })
 
-    const newUser = {
-      name: userInfo.nickname,
-      email: userInfo.email,
-      picture: userInfo.picture,
+      // if (user) {
+      //   console.log("user ald existed")
+      //   res.json({
+      //     success: false,
+      //     message: `User  ${user}  already existed`,
+      //     result: user,
+      //   })
+      // } else {
+      const newUser = {
+        name: userInfo.nickname,
+        email: userInfo.email,
+        picture: userInfo.picture,
+      }
+      // console.log("what is uer : ", user)
+      // if (user === null) {
+      //add user to db
+      // const result = await userCollection.insertOne(newUser)
+      const result = await userCollection.updateOne(
+        { email: userEmail }, //filter
+        { $set: newUser }, //update
+        { upsert: true } //upsert
+      )
+
+      console.log("UpdateOne  : ", result)
+      res.json({
+        success: true,
+        message: `User ${newUser} is created.`,
+        result: result,
+      })
+      // } else {
+      //   // console.log("Patch User: Already exists", user)
+      //   res.json({
+      //     success: false,
+      //     message: `User  ${user}  already existed`,
+      //     result: user,
+      //   })
+      // }
     }
-    // console.log("what is uer : ", user)
-    // if (user === null) {
-    //add user to db
-    // const result = await userCollection.insertOne(newUser)
-    const result = await userCollection.updateOne(
-      { email: userEmail }, //filter
-      { $set: newUser }, //update
-      { upsert: true } //upsert
-    )
-
-    console.log("Update One  - added a new user", result)
-    res.json({
-      success: true,
-      message: `User ${newUser} is created.`,
-      result: result,
-    })
-    // } else {
-    //   // console.log("Patch User: Already exists", user)
-    //   res.json({
-    //     success: false,
-    //     message: `User  ${user}  already existed`,
-    //     result: user,
-    //   })
     // }
-  })
+  )
 }
 
 // export const getUserInfoAndPosts = (app: any, database: Db) => {
