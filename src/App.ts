@@ -47,11 +47,6 @@ async function main() {
   })
   app.use(bodyParser.json())
 
-  // voteOnPost(app, database)
-  // getPostByUser(app, database)
-  // deletePostByUser(app, database)
-  // editPostByUser(app, database)
-
   patchUser(app, database)
   getAllUsers(app, database)
   getPosts(app, database)

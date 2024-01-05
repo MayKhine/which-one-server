@@ -18,32 +18,38 @@ export const patchUser = (app: any, database: Db) => {
 
   app.patch("/register", async (req, res) => {
     const userInfo = req.body
-    // console.log("NEW USER INFO: ", req.body)
     const userEmail = userInfo.email
-    const user = await userCollection.findOne({ email: userEmail })
+    // const user = await userCollection.findOne({ email: userEmail })
+
     const newUser = {
       name: userInfo.nickname,
       email: userInfo.email,
       picture: userInfo.picture,
     }
+    // console.log("what is uer : ", user)
+    // if (user === null) {
+    //add user to db
+    // const result = await userCollection.insertOne(newUser)
+    const result = await userCollection.updateOne(
+      { email: userEmail }, //filter
+      { $set: newUser }, //update
+      { upsert: true } //upsert
+    )
 
-    if (user === null) {
-      //add user to db
-      const result = await userCollection.insertOne(newUser)
-      // console.log("Patch User - added a new user", result)
-      res.json({
-        success: true,
-        message: `User ${newUser} is created.`,
-        result: result,
-      })
-    } else {
-      // console.log("Patch User: Already exists", user)
-      res.json({
-        success: false,
-        message: `User  ${user}  already existed`,
-        result: user,
-      })
-    }
+    console.log("Update One  - added a new user", result)
+    res.json({
+      success: true,
+      message: `User ${newUser} is created.`,
+      result: result,
+    })
+    // } else {
+    //   // console.log("Patch User: Already exists", user)
+    //   res.json({
+    //     success: false,
+    //     message: `User  ${user}  already existed`,
+    //     result: user,
+    //   })
+    // }
   })
 }
 
